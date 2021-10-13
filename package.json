@@ -1,0 +1,25 @@
+{
+  "name": "ccp-bot",
+  "version": "1.0.0",
+  "description": "China Number 1!",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node-dev --respawn src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-comprehend": "^3.36.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "chance": "^1.1.8",
+    "discord.js": "^13.2.0",
+    "mongoose": "^6.0.10",
+    "node-cache": "^5.1.2",
+    "openai-api": "^1.2.6"
+  },
+  "devDependencies": {
+    "@types/chance": "^1.1.3"
+  }
+}
