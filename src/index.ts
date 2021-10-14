@@ -1,18 +1,23 @@
-import { Client, Intents } from "discord.js";
+import { Client, Intents, Message, User } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { connect } from "mongoose";
-// I'm not sure why I decided to use this lib
-import NodeCache = require("node-cache");
-import { chinaWords } from "./phrases";
-import { comprehend } from "./comprehend";
-import { commands } from "./commands";
+import {
+  comprehendCooldown,
+  quizCooldown,
+  quizUsers,
+} from "./discord/cooldown";
+import { chinaWords } from "./util/phrases";
+import { comprehend } from "./ai/aws";
+import { commands } from "./discord/commands";
 import config from "../config.json";
-import { generateCredit, generateLeaderboard } from "./embed";
-import { leaderboard, lookup } from "./credit";
-import { Leaderboard } from "./types";
-import { leaderboardButtons } from "./buttons";
-import { classifySentiment } from "./sentiment";
+import { generateCredit, generateLeaderboard } from "./discord/embed";
+import { leaderboard, lookup } from "./util/credit";
+import { Leaderboard, Question } from "./util/types";
+import { leaderboardButtons } from "./discord/buttons";
+import { classifySentiment } from "./ai/openai";
+import { popQuestions } from "./util/qna";
+import { popQuiz } from "./util/quiz";
 
 const client = new Client({
   intents: [
@@ -21,20 +26,20 @@ const client = new Client({
     Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
   ],
 });
-const quizCache = new NodeCache({ stdTTL: 500, checkperiod: 100 });
-const creditCache = new NodeCache({ stdTTL: 1000, checkperiod: 100 });
-
 const rest = new REST({ version: "9" }).setToken(config.token);
 
 client.on("ready", async () => {
   if (!client.user) process.exit(1);
+
   console.log(`Logged in as ${client.user.tag}`);
   console.log(`Mode: ${config.mode}`);
   console.log(`AI: ${config.service}`);
+
   client.user.setPresence({
     status: "dnd",
     activities: [{ name: "the citizens of china", type: "WATCHING" }],
   });
+
   config.mode === "dev"
     ? await rest.put(
         Routes.applicationGuildCommands(client.user.id, config.guild),
@@ -52,18 +57,45 @@ client.on("ready", async () => {
 
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
-  quizCache.set(message.author.id, "");
 
-  if (Math.floor(Math.random() * 100) === 1) {
-    //TODO Do quiz
+  if (!quizUsers.has(message.author)) {
+    quizUsers.add(message.author);
+    setTimeout(() => quizUsers.delete(message.author), 120000);
+  }
+
+  if (Math.floor(Math.random() * 30) === 1) {
+    // const question: Question =
+    //   popQuestions[Math.floor(Math.random() * popQuestions.length)];
+
+    // const collector = message.channel.createMessageCollector({
+    //   filter: (m: Message) => m.author.id === message.author.id,
+    //   time: 120000,
+    // });
+    const userArr: User[] = Array.from(quizUsers);
+
+    popQuiz(
+      message.channel.createMessageCollector({
+        filter: (m: Message) => m.author.id === message.author.id,
+        time: 120000,
+      }),
+      popQuestions[Math.floor(Math.random() * popQuestions.length)],
+      userArr[Math.floor(Math.random() * userArr.length)]
+    );
   }
 
   for (const word of chinaWords)
     if (
       message.content.toLowerCase().includes(word) &&
-      !(await creditCache.get(message.author.id))
+      !comprehendCooldown.has(message.author.id)
     ) {
-      creditCache.set(message.author.id, "");
+      if (config.mode !== "dev") {
+        comprehendCooldown.add(message.author.id);
+        setTimeout(
+          () => comprehendCooldown.delete(message.author.id),
+          Math.floor(Math.random() * (600000 - 300000)) + 300000
+        );
+      }
+
       config.service == "aws"
         ? comprehend(message)
         : await classifySentiment(message);

@@ -14,6 +14,7 @@ export const positiveAttachments: string[] = [
   `https://cdn.discordapp.com/attachments/896474809091907614/896474861948514404/bb05d5f85ca3467391835a8c2630348c0cadd51c5f5e6cff7a01b8b39fa1d6d0_1.jpg`,
   `https://cdn.discordapp.com/attachments/896474809091907614/896474862846083072/38f.png`,
   `https://cdn.discordapp.com/attachments/896474809091907614/896474864418947112/20210921_160213.png`,
+  `https://media.discordapp.net/attachments/898000653933244416/898000740558176307/image0.png`,
 ];
 
 export const creditsLost: string[] = [

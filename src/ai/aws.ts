@@ -5,8 +5,8 @@ import {
 } from "@aws-sdk/client-comprehend";
 import { Chance } from "chance";
 import { Message } from "discord.js";
-import { update } from "./credit";
-import { generateReply } from "./embed";
+import { update } from "../util/credit";
+import { generateReply } from "../discord/embed";
 
 const chance = new Chance();
 
@@ -27,10 +27,7 @@ export async function comprehend(message: Message): Promise<void> {
   )
     return;
 
-  const score = generateCredit(
-    data.ResultList[0].Sentiment,
-    data.ResultList[0].SentimentScore
-  );
+  const score = generateCredit(data.ResultList[0].Sentiment);
 
   await message.channel.send({
     embeds: [generateReply(score, await update(message.author, score))],
@@ -39,25 +36,13 @@ export async function comprehend(message: Message): Promise<void> {
   return;
 }
 
-function generateCredit(sentiment: string, scores: SentimentScore): number {
+function generateCredit(sentiment: string): number {
   switch (sentiment) {
     case "NEGATIVE":
-      return Math.floor(
-        //@ts-ignore
-        chance.integer({ min: 75, max: 100 }) * -scores.Negative
-      );
+      return Math.floor(Math.random() * (-100 - 75)) - 75;
     case "POSITIVE":
-      return Math.floor(
-        //@ts-ignore
-        chance.integer({ min: 75, max: 100 }) * scores.Positive
-      );
-    case "NEUTRAL":
-      //@ts-ignore
-      return Math.floor(chance.integer({ min: 25, max: 50 }) * scores.Neutral);
-    case "MIXED":
-      //@ts-ignore
-      return Math.floor(chance.integer({ min: 25, max: 50 }) * scores.Mixed);
+      return Math.floor(Math.random() * (100 - 75)) + 75;
+    default:
+      return Math.floor(Math.random() * (10 + -10)) + -20;
   }
-
-  return 0;
 }

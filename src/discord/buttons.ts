@@ -1,5 +1,5 @@
 import { MessageActionRow, MessageButton } from "discord.js";
-import { Question } from "./types";
+import { Question } from "../util/types";
 export function leaderboardButtons(
   currentPage: number,
   maxPages: number

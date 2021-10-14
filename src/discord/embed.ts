@@ -1,4 +1,4 @@
-import { UserModel } from "./types";
+import { UserModel } from "../util/types";
 import { MessageEmbed } from "discord.js";
 import {
   creditsGained,
@@ -7,7 +7,7 @@ import {
   creditsInNegative,
   positiveAttachments,
   negativeAttachments,
-} from "./phrases";
+} from "../util/phrases";
 
 export function generateReply(score: number, current: number): MessageEmbed {
   let phrase: string =
@@ -52,14 +52,11 @@ export function generateCredit(
   author: boolean
 ): MessageEmbed {
   if (!credits || !username)
-    return new MessageEmbed()
-      .setTitle(`Error`)
-      .setColor("DARK_RED")
-      .setFooter(
-        author
-          ? `You are not part of the great republic.`
-          : `This citizen is not part of the great republic.`
-      );
+    return generateError(
+      author
+        ? `You are not part of the great republic.`
+        : `This citizen is not part of the great republic.`
+    );
 
   return new MessageEmbed()
     .setFooter(
@@ -81,11 +78,23 @@ export function generateLeaderboard(
     .setFooter(`Page: ${currentPage}`)
     .setColor("RANDOM");
 
-  // for (let i = 0; i < 9; i++) {
-  //   if (!scores[i]) break;
-  //   embed.addField(`<@${scores[i]._id}>`, scores[i].credit.toString());
-  // }
   scores.forEach((s) => embed.addField(s.username, s.credit.toString()));
 
   return embed;
+}
+
+export function generatePopQuestion(question: string): MessageEmbed {
+  return new MessageEmbed()
+    .setTitle("Citizen Test")
+    .setDescription(
+      `Hello fellow citizen please answer this question within 2 minutes to avoid the death penalty.\n\n${question}`
+    )
+    .setColor("RANDOM");
+}
+
+export function generateError(message: string): MessageEmbed {
+  return new MessageEmbed()
+    .setTitle(`Error`)
+    .setColor("DARK_RED")
+    .setFooter(message);
 }

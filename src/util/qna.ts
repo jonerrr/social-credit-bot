@@ -6,10 +6,12 @@ export const popQuestions: Question[] = [
     question: "who is the best leader?",
     answers: ["xi", "xi jingping", "jingping"],
   },
+  { question: "Is taiwan a real country?", answers: ["no", "nope"] },
 ];
 
 export const questions: Quiz[] = [
   { question: "Is taiwan part of china?", answers: ["Yes", "No"], correct: 0 },
+  { question: "Is taiwan a real country?", answers: ["Yes", "No"], correct: 1 },
   {
     question: "Does china have concentration camps filled with muslims?",
     answers: ["yes", "no"],
