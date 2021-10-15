@@ -1,4 +1,4 @@
-import { Client, Intents, Message, User } from "discord.js";
+import { Client, GuildMember, Intents, Message, User } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { connect } from "mongoose";
@@ -11,13 +11,18 @@ import { chinaWords } from "./util/phrases";
 import { comprehend } from "./ai/aws";
 import { commands } from "./discord/commands";
 import config from "../config.json";
-import { generateCredit, generateLeaderboard } from "./discord/embed";
+import {
+  generateCredit,
+  generateLeaderboard,
+  generatePopQuestion,
+} from "./discord/embed";
 import { leaderboard, lookup } from "./util/credit";
 import { Leaderboard, Question } from "./util/types";
 import { leaderboardButtons } from "./discord/buttons";
 import { classifySentiment } from "./ai/openai";
 import { popQuestions } from "./util/qna";
 import { popQuiz } from "./util/quiz";
+let taking = false;
 
 const client = new Client({
   intents: [
@@ -60,27 +65,32 @@ client.on("messageCreate", async (message) => {
 
   if (!quizUsers.has(message.author)) {
     quizUsers.add(message.author);
+
     setTimeout(() => quizUsers.delete(message.author), 120000);
   }
 
   if (Math.floor(Math.random() * 30) === 1) {
-    // const question: Question =
-    //   popQuestions[Math.floor(Math.random() * popQuestions.length)];
+    const user: User =
+      Array.from(quizUsers)[Math.floor(Math.random() * quizUsers.size)];
+    const question: Question =
+      popQuestions[Math.floor(Math.random() * popQuestions.length)];
 
-    // const collector = message.channel.createMessageCollector({
-    //   filter: (m: Message) => m.author.id === message.author.id,
-    //   time: 120000,
-    // });
-    const userArr: User[] = Array.from(quizUsers);
+    await message.channel.send({
+      content: `<@${user.id}>`,
+      embeds: [generatePopQuestion(question.question)],
+    });
 
     popQuiz(
       message.channel.createMessageCollector({
         filter: (m: Message) => m.author.id === message.author.id,
         time: 120000,
       }),
-      popQuestions[Math.floor(Math.random() * popQuestions.length)],
-      userArr[Math.floor(Math.random() * userArr.length)]
+      question,
+      user
     );
+
+    comprehendCooldown.add(message.author.id);
+    setTimeout(() => comprehendCooldown.delete(message.author.id), 130000);
   }
 
   for (const word of chinaWords)
@@ -115,14 +125,14 @@ client.on("interactionCreate", async (interaction) => {
 
       case "credits":
         const user = interaction.options.getMentionable("citizen");
-        //@ts-ignore
+
         await interaction.reply({
           embeds: [
             generateCredit(
               //@ts-ignore
-              user ? await lookup(user.id) : interaction.member?.user.username,
+              user ? user.user.username : interaction.member?.user.username,
               //@ts-ignore
-              await lookup(interaction.member?.user.id),
+              await lookup(user ? user.user.id : interaction.member?.user.id),
               !!!user
             ),
           ],

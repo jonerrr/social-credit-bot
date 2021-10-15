@@ -1,9 +1,9 @@
 import { Question, Quiz } from "./types";
 
 export const popQuestions: Question[] = [
-  { question: "what is the best country?", answers: ["china"] },
+  { question: "What is the best country?", answers: ["china"] },
   {
-    question: "who is the best leader?",
+    question: "Who is the best leader?",
     answers: ["xi", "xi jingping", "jingping"],
   },
   { question: "Is taiwan a real country?", answers: ["no", "nope"] },

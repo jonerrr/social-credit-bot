@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, User } from "discord.js";
 import { generateError, generateReply } from "../discord/embed";
 import { update } from "./credit";
 import { Question } from "./types";
@@ -16,7 +16,9 @@ export function popQuiz(collector: any, question: Question, author: User) {
     for (const word of question.answers) {
       if (!message.content.toLowerCase().includes(word) && tries > 0) {
         tries--;
-        message.reply({ embeds: [generateError(`WRONG! ${tries} left.`)] });
+        message.reply({
+          embeds: [generateError(`🛑😡WRONG! ${tries} tries left.`)],
+        });
         break;
       }
 
@@ -25,8 +27,9 @@ export function popQuiz(collector: any, question: Question, author: User) {
       message.reply({
         embeds: [generateReply(score, await update(author, score))],
       });
+
+      collector.stop();
+      break;
     }
   });
-
-  collector.on("end", (collected) => {});
 }

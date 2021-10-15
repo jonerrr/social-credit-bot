@@ -13,7 +13,7 @@ export function generateReply(score: number, current: number): MessageEmbed {
   let phrase: string =
     creditsGained[Math.floor(Math.random() * creditsGained.length)];
 
-  if (current > 1000 && score > 0 && Math.floor(Math.random() * 2) === 1)
+  if (current > 10000 && score > 0 && Math.floor(Math.random() * 2) === 1)
     phrase =
       creditsGainedMore[Math.floor(Math.random() * creditsGainedMore.length)];
   if (score < 0 && current > 0)
