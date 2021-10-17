@@ -7,7 +7,7 @@ import config from "../../config.json";
 const openAi = new OpenAI(config.key);
 
 export async function classifySentiment(message: Message): Promise<void> {
-  //TODO this is from the example on the OpenAI website
+  // This is from the example on the OpenAI website
   const sentiment: Completion = await openAi.complete({
     engine: "curie",
     prompt: `This is a tweet sentiment classifier\nTweet: \"I loved the new Batman movie!\"\nSentiment: Positive\n###\nTweet: \"I hate it when my phone battery dies\"\nSentiment: Negative\n###\nTweet: \"My day has been 👍\"\nSentiment: Positive\n###\nTweet: \"This is the link to the article\"\nSentiment: Neutral\n###\nTweet: ${message.content}\"\nSentiment:`,
