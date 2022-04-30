@@ -1,3 +1,5 @@
+import { Word } from "./types";
+
 export const creditsGained: string[] = [
   `(我们的) +_ Social Credits have been added to your account! Great work citizen, make sure to keep watching China Central Television (CCTV) brought to you by the Chinese Communist Party (CCP). Death to America! Glory to the CCP.\nIf you witness any citizens watching media from outside the Government sanctioned stations, please find our report fourm on https://www.baidu.com/ after connecting to the internet using Chinia Unicom, China Telecom, or via the latest technology through China Mobile. If you fail to use one of these ISP's, 50 social credits will be deducted from your account and you will be tried in the Supreme People's court. If you are absent at the time of your trial, your family will be held responsible for your actions.\nGlory to the CCP.`,
   `🇨🇳 🇨🇳 your social credit score has increased by _! you can eat food this week! 中华人民共和国的光荣 🇨🇳 🇨🇳`,
@@ -54,18 +56,25 @@ export const negativeAttachments: string[] = [
   `https://cdn.discordapp.com/attachments/896474809091907614/896474864830005288/Screenshot_20210911-165709.png.jpg`,
 ];
 
-export const chinaWords: string[] = [
-  "china",
-  "ccp",
-  "tiananmen",
-  "xinjiang",
-  "uyghur",
-  "winnie",
-  "xi",
-  "jinping",
-  "alibaba",
-  "jack ma",
-  "communism",
+export const words: Word[] = [
+  { word: "china", good: true },
+  { word: "ccp", good: true },
+  { word: "tiananmen", good: true },
+  { word: "xinjiang", good: true },
+  { word: "uyghur", good: true },
+  { word: "winnie", good: true },
+  { word: "xi", good: true },
+  { word: "jinping", good: true },
+  { word: "alibaba", good: true },
+  { word: "jack ma", good: true },
+  { word: "communism", good: true },
+  { word: "america", good: false },
+  { word: "usa", good: false },
+  { word: "democracy", good: false },
+  { word: "free speech", good: false },
+  { word: "biden", good: false },
+  { word: "tiananmen square massacre", good: false },
+  { word: "taiwan", good: false },
 ];
 
 //TODO add other countries

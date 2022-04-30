@@ -1,4 +1,4 @@
-import { Client, GuildMember, Intents, Message, User } from "discord.js";
+import { Client, Intents, Message, User } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { connect } from "mongoose";
@@ -7,7 +7,7 @@ import {
   quizCooldown,
   quizUsers,
 } from "./discord/cooldown";
-import { chinaWords } from "./util/phrases";
+import { words } from "./util/phrases";
 import { comprehend } from "./ai/aws";
 import { commands } from "./discord/commands";
 import config from "../config.json";
@@ -15,14 +15,14 @@ import {
   generateCredit,
   generateLeaderboard,
   generatePopQuestion,
+  generateQuizQuestion,
 } from "./discord/embed";
 import { leaderboard, lookup } from "./util/credit";
-import { Leaderboard, Question } from "./util/types";
+import { Leaderboard, Question, Quiz, QuizCache } from "./util/types";
 import { leaderboardButtons } from "./discord/buttons";
 import { classifySentiment } from "./ai/openai";
-import { popQuestions } from "./util/qna";
+import { popQuestions, questions } from "./util/qna";
 import { popQuiz } from "./util/quiz";
-let taking = false;
 
 const client = new Client({
   intents: [
@@ -93,9 +93,9 @@ client.on("messageCreate", async (message) => {
     setTimeout(() => comprehendCooldown.delete(message.author.id), 130000);
   }
 
-  for (const word of chinaWords)
+  for (const word of words)
     if (
-      message.content.toLowerCase().includes(word) &&
+      message.content.toLowerCase().includes(word.word) &&
       !comprehendCooldown.has(message.author.id)
     ) {
       if (config.mode !== "dev") {
@@ -107,8 +107,8 @@ client.on("messageCreate", async (message) => {
       }
 
       config.service == "aws"
-        ? comprehend(message)
-        : await classifySentiment(message);
+        ? comprehend(message, word.good)
+        : await classifySentiment(message, word.good);
       break;
     }
 });
@@ -118,6 +118,7 @@ client.on("interactionCreate", async (interaction) => {
     switch (interaction.commandName) {
       case "leaderboard":
         const lb: Leaderboard = await leaderboard(1);
+        console.log(lb);
         return await interaction.reply({
           embeds: [generateLeaderboard(lb.users, 1)],
           components: [leaderboardButtons(1, lb.maxPages)],
@@ -137,6 +138,28 @@ client.on("interactionCreate", async (interaction) => {
             ),
           ],
         });
+
+      case "quiz":
+        const quiz: Quiz[] = questions
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 3);
+
+        const indexes: number[] = [
+          questions.indexOf(quiz[0]),
+          questions.indexOf(quiz[1]),
+          questions.indexOf(quiz[2]),
+        ];
+
+        console.log(indexes);
+        await interaction.reply({
+          embeds: [
+            generateQuizQuestion(
+              quiz[0].question,
+              0,
+              interaction.user.username
+            ),
+          ],
+        });
       default:
         break;
     }
@@ -144,7 +167,7 @@ client.on("interactionCreate", async (interaction) => {
 
   if (interaction.isButton()) {
     const buttonInfo: string[] = interaction.customId.split("_");
-
+    console.log(buttonInfo);
     switch (buttonInfo[0]) {
       case "page":
         const lb: Leaderboard = await leaderboard(parseInt(buttonInfo[1]));

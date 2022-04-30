@@ -5,6 +5,9 @@ export const commands = [
     .setName("leaderboard")
     .setDescription("Social Credit Leaderboard"),
   new SlashCommandBuilder()
+    .setName("quiz")
+    .setDescription("Take a quiz to test your knowledge on the great republic."),
+  new SlashCommandBuilder()
     .setName("credits")
     .setDescription("Lookup a comrades social credit score.")
     .addMentionableOption((option) =>

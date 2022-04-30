@@ -35,7 +35,8 @@ function paginate(lb: UserModel[], pageNumber: number): UserModel[] {
 
 export async function leaderboard(page: number): Promise<Leaderboard> {
   if (!leaderboardCache || cacheExpire < Date.now()) {
-    leaderboardCache = await users.find().sort("desc");
+    const data: UserModel[] = await users.find();
+    leaderboardCache = data.sort((a, b) => a.credit - b.credit);
     cacheExpire = Date.now() + 300000;
   }
 
@@ -43,4 +44,15 @@ export async function leaderboard(page: number): Promise<Leaderboard> {
     users: paginate(leaderboardCache, page),
     maxPages: leaderboardCache.length / 10,
   };
+}
+
+export function generateCredits(sentiment: string, good: boolean): number {
+  switch (good ? sentiment.toLowerCase() : !good) {
+    case "negative":
+      return Math.floor(Math.random() * (-100 - 75)) - 75;
+    case "positive":
+      return Math.floor(Math.random() * (100 - 75)) + 75;
+    default:
+      return Math.floor(Math.random() * (10 + -10)) + -20;
+  }
 }

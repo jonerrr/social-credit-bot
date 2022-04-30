@@ -3,16 +3,16 @@ import {
   BatchDetectSentimentCommand,
   SentimentScore,
 } from "@aws-sdk/client-comprehend";
-import { Chance } from "chance";
 import { Message } from "discord.js";
-import { update } from "../util/credit";
+import { generateCredits, update } from "../util/credit";
 import { generateReply } from "../discord/embed";
-
-const chance = new Chance();
 
 const client = new ComprehendClient({ region: "us-east-1" });
 
-export async function comprehend(message: Message): Promise<void> {
+export async function comprehend(
+  message: Message,
+  good: boolean
+): Promise<void> {
   const data = await client.send(
     new BatchDetectSentimentCommand({
       LanguageCode: "en",
@@ -27,7 +27,7 @@ export async function comprehend(message: Message): Promise<void> {
   )
     return;
 
-  const score = generateCredit(data.ResultList[0].Sentiment);
+  const score = generateCredits(data.ResultList[0].Sentiment, good);
 
   await message.channel.send({
     embeds: [generateReply(score, await update(message.author, score))],
@@ -36,13 +36,13 @@ export async function comprehend(message: Message): Promise<void> {
   return;
 }
 
-function generateCredit(sentiment: string): number {
-  switch (sentiment) {
-    case "NEGATIVE":
-      return Math.floor(Math.random() * (-100 - 75)) - 75;
-    case "POSITIVE":
-      return Math.floor(Math.random() * (100 - 75)) + 75;
-    default:
-      return Math.floor(Math.random() * (10 + -10)) + -20;
-  }
-}
+// function generateCredit(sentiment: string): number {
+//   switch (sentiment) {
+//     case "NEGATIVE":
+//       return Math.floor(Math.random() * (-100 - 75)) - 75;
+//     case "POSITIVE":
+//       return Math.floor(Math.random() * (100 - 75)) + 75;
+//     default:
+//       return Math.floor(Math.random() * (10 + -10)) + -20;
+//   }
+// }

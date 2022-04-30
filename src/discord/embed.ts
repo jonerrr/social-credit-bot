@@ -30,7 +30,9 @@ export function generateReply(score: number, current: number): MessageEmbed {
     )
     .setDescription(phrase.replace("_", score.toString()))
     .setColor(score > 0 ? "GREEN" : "DARK_RED")
-    .setFooter(`Total Social Credits: ${current}`);
+    .setFooter(
+      `Total Social Credits: ${current} || This is not 100% accurate.`
+    );
 
   if (Math.floor(Math.random() * 10) === 5)
     embed.setImage(
@@ -89,6 +91,18 @@ export function generatePopQuestion(question: string): MessageEmbed {
     .setDescription(
       `Hello fellow citizen please answer this question within 2 minutes to avoid the death penalty.\n\n${question}`
     )
+    .setColor("RANDOM");
+}
+
+export function generateQuizQuestion(
+  question: string,
+  currentQuestion: number,
+  username: string
+): MessageEmbed {
+  return new MessageEmbed()
+    .setTitle(`Question ${currentQuestion++}/3`)
+    .setDescription(question)
+    .setFooter(`Requested by ${username}`)
     .setColor("RANDOM");
 }
 

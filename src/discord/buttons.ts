@@ -30,15 +30,16 @@ export function leaderboardButtons(
 
 export function quizButtons(
   question: Question,
+  current: number,
   asker: string,
-  index: number
+  indexes: number[]
 ): MessageActionRow {
   const row = new MessageActionRow();
 
   question.answers.forEach((a) =>
     row.addComponents(
       new MessageButton()
-        .setCustomId(`answer_${index}_${asker}`)
+        .setCustomId(`quiz_${indexes.join("_")}_${asker}`)
         .setStyle("PRIMARY")
         .setLabel(a)
     )

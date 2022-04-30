@@ -1,12 +1,15 @@
 import OpenAI, { Completion } from "openai-api";
 import { Message } from "discord.js";
-import { update } from "../util/credit";
+import { generateCredits, update } from "../util/credit";
 import { generateReply } from "../discord/embed";
 import config from "../../config.json";
 
 const openAi = new OpenAI(config.key);
 
-export async function classifySentiment(message: Message): Promise<void> {
+export async function classifySentiment(
+  message: Message,
+  good: boolean
+): Promise<void> {
   //TODO this is from the example on the OpenAI website
   const sentiment: Completion = await openAi.complete({
     engine: "curie",
@@ -19,22 +22,25 @@ export async function classifySentiment(message: Message): Promise<void> {
     stop: "###",
   });
 
-  const score: number = generateScore(
-    sentiment.data.choices[0].text.toLowerCase().replace(/\s+/g, "")
+  const score: number = generateCredits(
+    sentiment.data.choices[0].text.toLowerCase().replace(/\s+/g, ""),
+    good
   );
+
+  console.log(score);
 
   await message.channel.send({
     embeds: [generateReply(score, await update(message.author, score))],
   });
 }
 
-function generateScore(sentiment: string): number {
-  switch (sentiment) {
-    case "positive":
-      return Math.floor(Math.random() * (100 - 75)) + 75;
-    case "negative":
-      return Math.floor(Math.random() * (-100 - 75)) - 75;
-    default:
-      return Math.floor(Math.random() * (10 + -10)) + -20;
-  }
-}
+// function generateScore(sentiment: string): number {
+//   switch (sentiment) {
+//     case "positive":
+//       return Math.floor(Math.random() * (100 - 75)) + 75;
+//     case "negative":
+//       return Math.floor(Math.random() * (-100 - 75)) - 75;
+//     default:
+//       return Math.floor(Math.random() * (10 + -10)) + -20;
+//   }
+// }
