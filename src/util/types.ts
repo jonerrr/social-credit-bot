@@ -1,3 +1,5 @@
+import { MessageSelectOptionData } from "discord.js";
+
 export interface Word {
   word: string;
   good: boolean;
@@ -9,8 +11,7 @@ export interface Question {
 
 export interface Quiz {
   question: string;
-  answers: string[];
-  correct: number;
+  answers: MessageSelectOptionData[];
 }
 
 export interface QuizCache {

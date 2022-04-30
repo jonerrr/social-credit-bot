@@ -7,40 +7,79 @@ export const popQuestions: Question[] = [
     answers: ["xi", "xi jingping", "jingping"],
   },
   { question: "Is taiwan a real country?", answers: ["no", "nope"] },
+  {
+    question: "Long live...",
+    answers: ["the ccp", "the china communist party", "china"],
+  },
 ];
 
 export const questions: Quiz[] = [
-  { question: "Is taiwan part of china?", answers: ["Yes", "No"], correct: 0 },
-  { question: "Is taiwan a real country?", answers: ["Yes", "No"], correct: 1 },
   {
-    question: "Does china have concentration camps filled with muslims?",
-    answers: ["yes", "no"],
-    correct: 0,
+    question: "Is Taiwan part of China?",
+    answers: [
+      { label: "Yes", value: "c" },
+      { label: "No", value: "i" },
+    ],
+  },
+  {
+    question: "Is Taiwan a real country?",
+    answers: [
+      { label: "Yes", value: "i" },
+      { label: "No", value: "c" },
+    ],
+  },
+  {
+    question: "Does China have concentration camps filled with muslims?",
+    answers: [
+      { label: "Yes", value: "i" },
+      { label: "No", value: "c" },
+    ],
   },
   {
     question: "What happened on June 4th?",
-    answers: ["Tiananmen Square protests", "Internet Maintnence day"],
-    correct: 1,
+    answers: [
+      { label: "Tiananmen Square protests", value: "i" },
+      { label: "Internet Maintnence day", value: "c" },
+    ],
   },
   {
     question: "How long can you play video games for?",
-    answers: ["10 seconds", "5 hours", "3 hours"],
-    correct: 2,
+    answers: [
+      { label: "1 hour a week", value: "i1" },
+      { label: "3 hours a week", value: "c" },
+      { label: "5 hours a week", value: "i2" },
+    ],
   },
   {
     question: "What is the best place ever?",
-    answers: ["America", "China", "Britian"],
-    correct: 1,
+    answers: [
+      { label: "America", value: "i1" },
+      { label: "Britain", value: "i2" },
+      { label: "China", value: "c" },
+    ],
   },
   {
     question:
       "Will you donate your village to the CCP for nuclear warhead testing?",
-    answers: ["Yes", "No"],
-    correct: 0,
+    answers: [
+      { label: "Yes", value: "c" },
+      { label: "No", value: "i" },
+    ],
   },
   {
     question: "What is the best phone ever?",
-    answers: ["Iphone 13", "Samsung S21", "Huawei P50"],
-    correct: 1,
+    answers: [
+      { label: "Iphone 13", value: "i1" },
+      { label: "Samsung S21", value: "i2" },
+      { label: "Huawei P50", value: "c" },
+    ],
+  },
+  {
+    question: "How is your day going?",
+    answers: [
+      { label: "Great! I love China! Long live the CCP!", value: "c" },
+      { label: "Not sure", value: "i1" },
+      { label: "Bad", value: "i2" },
+    ],
   },
 ];

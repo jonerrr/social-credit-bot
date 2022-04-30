@@ -1,3 +1,5 @@
+//TODO fix AWS comprehend, it currently doesn't work
+
 import {
   ComprehendClient,
   BatchDetectSentimentCommand,
@@ -27,7 +29,7 @@ export async function comprehend(
   )
     return;
 
-  const score = generateCredits(data.ResultList[0].Sentiment, good);
+  const score = generateCredits(data.ResultList[0].Sentiment);
 
   await message.channel.send({
     embeds: [generateReply(score, await update(message.author, score))],

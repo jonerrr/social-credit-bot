@@ -30,9 +30,7 @@ export function generateReply(score: number, current: number): MessageEmbed {
     )
     .setDescription(phrase.replace("_", score.toString()))
     .setColor(score > 0 ? "GREEN" : "DARK_RED")
-    .setFooter(
-      `Total Social Credits: ${current} || This is not 100% accurate.`
-    );
+    .setFooter({ text: `Total Social Credits: ${current}` });
 
   if (Math.floor(Math.random() * 10) === 5)
     embed.setImage(
@@ -57,17 +55,17 @@ export function generateCredit(
     return generateError(
       author
         ? `You are not part of the great republic.`
-        : `This citizen is not part of the great republic.`
+        : `This user is not part of the great republic (for now).`
     );
 
   return new MessageEmbed()
-    .setFooter(
-      `${
+    .setFooter({
+      text: `${
         author
           ? `You have ${credits} credits.`
           : `Your fellow comrade, ${username} has ${credits} credits.`
-      }`
-    )
+      }`,
+    })
     .setColor("RANDOM");
 }
 
@@ -77,7 +75,7 @@ export function generateLeaderboard(
 ): MessageEmbed {
   const embed = new MessageEmbed()
     .setTitle("Social Credit Leaderboard")
-    .setFooter(`Page: ${currentPage}`)
+    .setFooter({ text: `Page: ${currentPage}` })
     .setColor("RANDOM");
 
   scores.forEach((s) => embed.addField(s.username, s.credit.toString()));
@@ -100,9 +98,9 @@ export function generateQuizQuestion(
   username: string
 ): MessageEmbed {
   return new MessageEmbed()
-    .setTitle(`Question ${currentQuestion++}/3`)
+    .setTitle(`Question ${currentQuestion + 1}/3`)
     .setDescription(question)
-    .setFooter(`Requested by ${username}`)
+    .setFooter({ text: `Requested by ${username}` })
     .setColor("RANDOM");
 }
 
@@ -110,5 +108,5 @@ export function generateError(message: string): MessageEmbed {
   return new MessageEmbed()
     .setTitle(`Error`)
     .setColor("DARK_RED")
-    .setFooter(message);
+    .setFooter({ text: message });
 }

@@ -1,23 +1,30 @@
-import { Client, Intents, Message, User } from "discord.js";
+import {
+  Client,
+  Intents,
+  Message,
+  MessageActionRow,
+  MessageEmbed,
+  MessageSelectMenu,
+  User,
+} from "discord.js";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { connect } from "mongoose";
-import {
-  comprehendCooldown,
-  quizCooldown,
-  quizUsers,
-} from "./discord/cooldown";
+import { sentimentCooldown, quizCooldown, quizUsers } from "./discord/cooldown";
 import { words } from "./util/phrases";
 import { comprehend } from "./ai/aws";
+import _ from "lodash";
 import { commands } from "./discord/commands";
 import config from "../config.json";
 import {
   generateCredit,
+  generateError,
   generateLeaderboard,
   generatePopQuestion,
   generateQuizQuestion,
+  generateReply,
 } from "./discord/embed";
-import { leaderboard, lookup } from "./util/credit";
+import { leaderboard, lookup, update } from "./util/credit";
 import { Leaderboard, Question, Quiz, QuizCache } from "./util/types";
 import { leaderboardButtons } from "./discord/buttons";
 import { classifySentiment } from "./ai/openai";
@@ -63,9 +70,11 @@ client.on("ready", async () => {
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
 
+  // Add users for quiz to set so only active users can take the quiz
   if (!quizUsers.has(message.author)) {
     quizUsers.add(message.author);
 
+    // Delete after two minutes
     setTimeout(() => quizUsers.delete(message.author), 120000);
   }
 
@@ -89,19 +98,19 @@ client.on("messageCreate", async (message) => {
       user
     );
 
-    comprehendCooldown.add(message.author.id);
-    setTimeout(() => comprehendCooldown.delete(message.author.id), 130000);
+    sentimentCooldown.add(message.author.id);
+    setTimeout(() => sentimentCooldown.delete(message.author.id), 130000);
   }
 
   for (const word of words)
     if (
       message.content.toLowerCase().includes(word.word) &&
-      !comprehendCooldown.has(message.author.id)
+      !sentimentCooldown.has(message.author.id)
     ) {
       if (config.mode !== "dev") {
-        comprehendCooldown.add(message.author.id);
+        sentimentCooldown.add(message.author.id);
         setTimeout(
-          () => comprehendCooldown.delete(message.author.id),
+          () => sentimentCooldown.delete(message.author.id),
           Math.floor(Math.random() * (600000 - 300000)) + 300000
         );
       }
@@ -125,33 +134,25 @@ client.on("interactionCreate", async (interaction) => {
         });
 
       case "credits":
-        const user = interaction.options.getMentionable("citizen");
-
-        await interaction.reply({
+        const user = interaction.options.getUser("citizen");
+        return await interaction.reply({
           embeds: [
             generateCredit(
-              //@ts-ignore
-              user ? user.user.username : interaction.member?.user.username,
-              //@ts-ignore
-              await lookup(user ? user.user.id : interaction.member?.user.id),
+              user ? user.username : interaction.member?.user.username,
+              await lookup(user ? user.id : interaction.member?.user.id),
               !!!user
             ),
           ],
         });
 
       case "quiz":
-        const quiz: Quiz[] = questions
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 3);
-
+        const quiz = _.sampleSize(questions, 3);
         const indexes: number[] = [
-          questions.indexOf(quiz[0]),
           questions.indexOf(quiz[1]),
           questions.indexOf(quiz[2]),
         ];
 
-        console.log(indexes);
-        await interaction.reply({
+        return await interaction.reply({
           embeds: [
             generateQuizQuestion(
               quiz[0].question,
@@ -159,10 +160,76 @@ client.on("interactionCreate", async (interaction) => {
               interaction.user.username
             ),
           ],
+          components: [
+            new MessageActionRow().addComponents(
+              new MessageSelectMenu()
+                .setCustomId(`${interaction.user.id}_${indexes.join("_")}`)
+                .setOptions(quiz[0].answers)
+            ),
+          ],
         });
       default:
         break;
     }
+  }
+
+  if (interaction.isSelectMenu()) {
+    const selectInfo: string[] = interaction.customId.split("_");
+    const user = selectInfo.shift();
+
+    if (interaction.user.id !== user) return;
+    const message = await interaction.channel.messages.fetch(
+      interaction.message.id
+    );
+
+    if (interaction.values[0] !== "c") {
+      await message.edit({
+        embeds: [
+          new MessageEmbed()
+            .setColor("DARK_RED")
+            .setTitle("WRONG! You have failed the quiz")
+            .setDescription("-150 Social Credits")
+            .setFooter({
+              text: `Total Social Credits: ${await update(
+                interaction.user,
+                -150
+              )}`,
+            }),
+        ],
+        components: [],
+      });
+    }
+
+    await interaction.deferUpdate();
+
+    const question = questions[parseInt(selectInfo.shift())];
+
+    if (!question) {
+      await message.edit({
+        embeds: [generateReply(300, await update(interaction.user, 300))],
+        components: [],
+      });
+      return;
+    }
+
+    await message.edit({
+      embeds: [
+        generateQuizQuestion(
+          question.question,
+          selectInfo.length === 1 ? selectInfo.length : 2,
+          interaction.user.username
+        ),
+      ],
+      components: [
+        new MessageActionRow().addComponents(
+          new MessageSelectMenu()
+            .setCustomId(`${interaction.user.id}_${selectInfo}`)
+            .setOptions(question.answers)
+        ),
+      ],
+    });
+
+    return;
   }
 
   if (interaction.isButton()) {

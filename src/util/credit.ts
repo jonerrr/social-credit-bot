@@ -46,13 +46,14 @@ export async function leaderboard(page: number): Promise<Leaderboard> {
   };
 }
 
-export function generateCredits(sentiment: string, good: boolean): number {
-  switch (good ? sentiment.toLowerCase() : !good) {
+export function generateCredits(sentiment: string
+): number {
+  switch (sentiment.toLowerCase()) {
     case "negative":
       return Math.floor(Math.random() * (-100 - 75)) - 75;
     case "positive":
       return Math.floor(Math.random() * (100 - 75)) + 75;
-    default:
-      return Math.floor(Math.random() * (10 + -10)) + -20;
+    // default:
+    //   return Math.floor(Math.random() * (10 + -10)) + -20;
   }
 }
