@@ -71,9 +71,9 @@ client.on("messageCreate", async (message) => {
   if (
     message.author.bot ||
     (message.channel.type === "GUILD_TEXT" &&
-      message.channel
+      !message.channel
         .permissionsFor(client.user.id)
-        .missing(["SEND_MESSAGES", "ATTACH_FILES"]))
+        .has(["SEND_MESSAGES", "ATTACH_FILES"]))
   )
     return;
 
