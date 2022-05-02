@@ -3,7 +3,6 @@ import { Message } from "discord.js";
 import { generateCredits, update } from "../util/credit";
 import { generateReply } from "../discord/embed";
 import config from "../../config.json";
-import { SimpleConsoleLogger } from "typeorm";
 
 const openai = new OpenAIApi(
   new Configuration({
