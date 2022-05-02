@@ -78,7 +78,12 @@ client.on("messageCreate", async (message) => {
     setTimeout(() => quizUsers.delete(message.author), 120000);
   }
 
-  if (Math.floor(Math.random() * 30) === 1) {
+  if (
+    Math.floor(Math.random() * 30) === 1 ||
+    (message.author.id === config.owner &&
+      config.mode === "dev" &&
+      message.content.toLowerCase().includes("pop quiz dev"))
+  ) {
     const user: User =
       Array.from(quizUsers)[Math.floor(Math.random() * quizUsers.size)];
     const question: Question =
@@ -127,10 +132,9 @@ client.on("interactionCreate", async (interaction) => {
     switch (interaction.commandName) {
       case "leaderboard":
         const lb: Leaderboard = await leaderboard(1);
-        console.log(lb);
         return await interaction.reply({
           embeds: [generateLeaderboard(lb.users, 1)],
-          components: [leaderboardButtons(1, lb.maxPages)],
+          components: [leaderboardButtons(1, lb.prevPage, lb.nextPage)],
         });
 
       case "credits":
@@ -146,6 +150,17 @@ client.on("interactionCreate", async (interaction) => {
         });
 
       case "quiz":
+        if (quizCooldown.has(interaction.user.id))
+          return await interaction.reply({
+            embeds: [
+              generateError(
+                "Sorry loyal citizen, you have taken a quiz too recently. Maybe you should take a look at your 抖音 feed in the meantime."
+              ),
+            ],
+          });
+        quizCooldown.add(interaction.user.id);
+        setTimeout(() => quizCooldown.delete(interaction.user.id), 300000);
+
         const quiz = _.sampleSize(questions, 3);
         const indexes: number[] = [
           questions.indexOf(quiz[1]),
@@ -198,6 +213,7 @@ client.on("interactionCreate", async (interaction) => {
         ],
         components: [],
       });
+      return;
     }
 
     await interaction.deferUpdate();
@@ -234,14 +250,17 @@ client.on("interactionCreate", async (interaction) => {
 
   if (interaction.isButton()) {
     const buttonInfo: string[] = interaction.customId.split("_");
-    console.log(buttonInfo);
     switch (buttonInfo[0]) {
       case "page":
         const lb: Leaderboard = await leaderboard(parseInt(buttonInfo[1]));
         return await interaction.update({
           embeds: [generateLeaderboard(lb.users, parseInt(buttonInfo[1]))],
           components: [
-            leaderboardButtons(parseInt(buttonInfo[1]), lb.maxPages),
+            leaderboardButtons(
+              parseInt(buttonInfo[1]),
+              lb.prevPage,
+              lb.nextPage
+            ),
           ],
         });
 

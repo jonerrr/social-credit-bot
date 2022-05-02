@@ -24,8 +24,6 @@ export async function classifySentiment(
     presence_penalty: 0,
   });
 
-  console.log(sentiment.data.choices[0].text);
-  console.log(sentiment.data.choices[0].text.replace(/\s+/g, ""));
 
   let score = generateCredits(
     sentiment.data.choices[0].text.includes("positive")
@@ -34,7 +32,6 @@ export async function classifySentiment(
   );
 
   score = good ? score : -score;
-  console.log(score);
 
   await message.channel.send({
     embeds: [generateReply(score, await update(message.author, score))],

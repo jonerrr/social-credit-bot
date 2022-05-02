@@ -87,7 +87,7 @@ export function generatePopQuestion(question: string): MessageEmbed {
   return new MessageEmbed()
     .setTitle("Citizen Test")
     .setDescription(
-      `Hello fellow citizen please answer this question within 2 minutes to avoid the death penalty.\n\n${question}`
+      `Hello fellow citizen please answer this question within 2 minutes to avoid the death penalty.\n\n*${question}**`
     )
     .setColor("RANDOM");
 }

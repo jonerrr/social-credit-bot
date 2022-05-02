@@ -1,8 +1,12 @@
 {
   "mode": "",
   "guild": "",
+  "owner": "",
   "service": "",
   "token": "",
   "uri": "",
-  "key": ""
+  "ai": {
+    "openai": "",
+    "aws": ""
+  }
 }

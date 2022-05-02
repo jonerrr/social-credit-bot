@@ -15,6 +15,8 @@ export async function comprehend(
   message: Message,
   good: boolean
 ): Promise<void> {
+  console.log("AWS Comprehend currently broken, please use OpenAI");
+  process.exit(1);
   const data = await client.send(
     new BatchDetectSentimentCommand({
       LanguageCode: "en",

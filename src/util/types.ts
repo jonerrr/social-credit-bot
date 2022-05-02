@@ -28,5 +28,6 @@ export interface UserModel {
 
 export interface Leaderboard {
   users: UserModel[];
-  maxPages: number;
+  nextPage: boolean;
+  prevPage: boolean;
 }

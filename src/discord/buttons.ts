@@ -2,28 +2,29 @@ import { MessageActionRow, MessageButton } from "discord.js";
 import { Question } from "../util/types";
 export function leaderboardButtons(
   currentPage: number,
-  maxPages: number
+  prevPage: boolean,
+  nextPage: boolean
 ): MessageActionRow {
   return new MessageActionRow().addComponents(
     new MessageButton()
       .setCustomId(`page_${currentPage - 2}`)
       .setEmoji("⏪")
-      .setDisabled(currentPage <= 1)
+      .setDisabled(!prevPage)
       .setStyle("SECONDARY"),
     new MessageButton()
       .setCustomId(`page_${currentPage--}`)
       .setEmoji("⬅️")
-      .setDisabled(currentPage <= 1)
+      .setDisabled(!prevPage)
       .setStyle("SECONDARY"),
     new MessageButton()
       .setCustomId(`page_${currentPage++}`)
       .setEmoji("➡️")
-      .setDisabled(currentPage >= maxPages)
+      .setDisabled(!nextPage)
       .setStyle("SECONDARY"),
     new MessageButton()
       .setCustomId(`page_${currentPage + 2}`)
       .setEmoji("⏩")
-      .setDisabled(currentPage >= maxPages)
+      .setDisabled(!nextPage)
       .setStyle("SECONDARY")
   );
 }
