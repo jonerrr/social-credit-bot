@@ -68,7 +68,14 @@ client.on("ready", async () => {
 });
 
 client.on("messageCreate", async (message) => {
-  if (message.author.bot) return;
+  if (
+    message.author.bot ||
+    (message.channel.type === "GUILD_TEXT" &&
+      message.channel
+        .permissionsFor(client.user.id)
+        .missing(["SEND_MESSAGES", "ATTACH_FILES"]))
+  )
+    return;
 
   // Add users for quiz to set so only active users can take the quiz
   if (!quizUsers.has(message.author)) {
