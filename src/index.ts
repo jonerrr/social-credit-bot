@@ -78,53 +78,58 @@ client.on("messageCreate", async (message) => {
     setTimeout(() => quizUsers.delete(message.author), 120000);
   }
 
-  if (
-    Math.floor(Math.random() * 30) === 1 ||
-    (message.author.id === config.owner &&
-      config.mode === "dev" &&
-      message.content.toLowerCase().includes("pop quiz dev"))
-  ) {
-    const user: User =
-      Array.from(quizUsers)[Math.floor(Math.random() * quizUsers.size)];
-    const question: Question =
-      popQuestions[Math.floor(Math.random() * popQuestions.length)];
-
-    await message.channel.send({
-      content: `<@${user.id}>`,
-      embeds: [generatePopQuestion(question.question)],
-    });
-
-    popQuiz(
-      message.channel.createMessageCollector({
-        filter: (m: Message) => m.author.id === message.author.id,
-        time: 120000,
-      }),
-      question,
-      user
-    );
-
-    sentimentCooldown.add(message.author.id);
-    setTimeout(() => sentimentCooldown.delete(message.author.id), 130000);
-  }
-
-  for (const word of words)
+  try {
     if (
-      message.content.toLowerCase().includes(word.word) &&
-      !sentimentCooldown.has(message.author.id)
+      Math.floor(Math.random() * 30) === 1 ||
+      (message.author.id === config.owner &&
+        config.mode === "dev" &&
+        message.content.toLowerCase().includes("pop quiz dev"))
     ) {
-      if (config.mode !== "dev") {
-        sentimentCooldown.add(message.author.id);
-        setTimeout(
-          () => sentimentCooldown.delete(message.author.id),
-          Math.floor(Math.random() * (600000 - 300000)) + 300000
-        );
-      }
+      const user: User =
+        Array.from(quizUsers)[Math.floor(Math.random() * quizUsers.size)];
+      const question: Question =
+        popQuestions[Math.floor(Math.random() * popQuestions.length)];
 
-      config.service == "aws"
-        ? comprehend(message, word.good)
-        : await classifySentiment(message, word.good);
-      break;
+      await message.channel.send({
+        content: `<@${user.id}>`,
+        embeds: [generatePopQuestion(question.question)],
+      });
+
+      popQuiz(
+        message.channel.createMessageCollector({
+          filter: (m: Message) => m.author.id === message.author.id,
+          time: 120000,
+        }),
+        question,
+        user
+      );
+
+      sentimentCooldown.add(message.author.id);
+      setTimeout(() => sentimentCooldown.delete(message.author.id), 130000);
     }
+
+    for (const word of words)
+      if (
+        message.content.toLowerCase().includes(word.word) &&
+        !sentimentCooldown.has(message.author.id)
+      ) {
+        if (config.mode !== "dev") {
+          sentimentCooldown.add(message.author.id);
+          setTimeout(
+            () => sentimentCooldown.delete(message.author.id),
+            Math.floor(Math.random() * (600000 - 300000)) + 300000
+          );
+        }
+
+        config.service == "aws"
+          ? comprehend(message, word.good)
+          : await classifySentiment(message, word.good);
+        break;
+      }
+  } catch (e) {
+    console.log(e);
+    console.log("Error sending message");
+  }
 });
 
 client.on("interactionCreate", async (interaction) => {
