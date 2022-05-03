@@ -25,7 +25,7 @@ import {
   generateReply,
 } from "./discord/embed";
 import { leaderboard, lookup, update } from "./util/credit";
-import { Leaderboard, Question, Quiz, QuizCache } from "./util/types";
+import { Leaderboard, Question } from "./util/types";
 import { leaderboardButtons } from "./discord/buttons";
 import { classifySentiment } from "./ai/openai";
 import { popQuestions, questions } from "./util/qna";
@@ -110,9 +110,6 @@ client.on("messageCreate", async (message) => {
         question,
         user
       );
-
-      sentimentCooldown.add(message.author.id);
-      setTimeout(() => sentimentCooldown.delete(message.author.id), 130000);
     }
 
     for (const word of words)

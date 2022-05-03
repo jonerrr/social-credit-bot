@@ -14,12 +14,6 @@ export interface Quiz {
   answers: MessageSelectOptionData[];
 }
 
-export interface QuizCache {
-  user: string;
-  current: number;
-  questions: Quiz[];
-}
-
 export interface UserModel {
   _id: string;
   username: string;

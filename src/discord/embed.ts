@@ -77,9 +77,9 @@ export function generateLeaderboard(
     .setTitle("Social Credit Leaderboard")
     .setFooter({ text: `Page: ${currentPage}` })
     .setColor("RANDOM");
-
-  scores.forEach((s) => embed.addField(s.username, s.credit.toString()));
-
+  scores.forEach((s) =>
+    embed.addField(s.username, `${s.credit.toString()} credits`)
+  );
   return embed;
 }
 
