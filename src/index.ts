@@ -87,7 +87,7 @@ client.on("messageCreate", async (message) => {
 
   try {
     if (
-      Math.floor(Math.random() * 30) === 1 ||
+      Math.floor(Math.random() * 60) === 1 ||
       (message.author.id === config.owner &&
         config.mode === "dev" &&
         message.content.toLowerCase().includes("pop quiz dev"))
@@ -110,13 +110,20 @@ client.on("messageCreate", async (message) => {
         question,
         user
       );
+      sentimentCooldown.add(message.author.id);
+      setTimeout(async () => {
+        sentimentCooldown.delete(message.author.id);
+        const score = Math.floor(Math.random() * (-100 - 75)) - 75;
+        return await message.channel.send({
+          content: `<@${message.author.id}>`,
+          embeds: [generateReply(score, await update(message.author, score))],
+        });
+      }, 120000);
     }
 
+    if (sentimentCooldown.has(message.author.id)) return;
     for (const word of words)
-      if (
-        message.content.toLowerCase().includes(word.word) &&
-        !sentimentCooldown.has(message.author.id)
-      ) {
+      if (message.content.toLowerCase().includes(word.word)) {
         if (config.mode !== "dev") {
           sentimentCooldown.add(message.author.id);
           setTimeout(
