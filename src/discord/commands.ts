@@ -15,4 +15,45 @@ export const commands = [
     .addUserOption((option) =>
       option.setName("citizen").setDescription("Citizen to lookup")
     ),
+  new SlashCommandBuilder()
+    .setName("settings")
+    .setDescription("Manage settings")
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("user")
+        .setDescription("Manage your settings")
+        .addBooleanOption((option) =>
+          option
+            .setName("sentiment")
+            .setDescription(
+              "Increase/Decrease credit score based off of sentiment in messages."
+            )
+        )
+        .addBooleanOption((option) =>
+          option
+            .setName("quiz")
+            .setDescription(
+              "Pop quizzes will/will not randomly show up for you."
+            )
+        )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("guild")
+        .setDescription("Manage guild settings (Admin only)")
+        .addBooleanOption((option) =>
+          option
+            .setName("sentiment")
+            .setDescription(
+              "Increase/Decrease credit score based off of sentiment in messages."
+            )
+        )
+        .addBooleanOption((option) =>
+          option
+            .setName("quiz")
+            .setDescription(
+              "Pop quizzes will/will not randomly show up in this guild."
+            )
+        )
+    ),
 ].map((command) => command.toJSON());

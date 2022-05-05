@@ -199,6 +199,8 @@ client.on("interactionCreate", async (interaction) => {
             ),
           ],
         });
+
+      case "settings":
       default:
         break;
     }
@@ -280,6 +282,9 @@ client.on("interactionCreate", async (interaction) => {
           ],
         });
 
+      case "settings":
+        // settings, sentiment or quiz, guild or user, id, true or false
+        break;
       default:
         break;
     }

@@ -18,6 +18,15 @@ export interface UserModel {
   _id: string;
   username: string;
   credit: number;
+  sentiment?: boolean;
+  popQuiz?: boolean;
+  voteExpire: number;
+}
+
+export interface ServerModel {
+  _id: string;
+  sentiment: boolean;
+  popQuiz: boolean;
 }
 
 export interface Leaderboard {
