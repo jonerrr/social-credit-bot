@@ -104,16 +104,6 @@ export function generateQuizQuestion(
     .setColor("RANDOM");
 }
 
-export function settings(type: "User" | "Guild"): MessageEmbed {
-  return new MessageEmbed()
-    .setTitle(`Manage ${type} Settings`)
-    .setDescription(
-      `Sentiment --- Increase/Decrease credit score based off of sentiment in messages\nPop Quiz --- Pop quizzes will randomly show up ${
-        type === "User" ? "for you" : "in chat"
-      }\n\n🟩 === Enabled\n🟥 === Disabled`
-    );
-}
-
 export function generateError(message: string): MessageEmbed {
   return new MessageEmbed()
     .setTitle(`Error`)

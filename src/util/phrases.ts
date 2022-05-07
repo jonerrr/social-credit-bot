@@ -17,11 +17,15 @@ export const positiveAttachments: string[] = [
   `https://cdn.discordapp.com/attachments/896474809091907614/896474862846083072/38f.png`,
   `https://cdn.discordapp.com/attachments/896474809091907614/896474864418947112/20210921_160213.png`,
   `https://media.discordapp.net/attachments/898000653933244416/898000740558176307/image0.png`,
+  `https://i.ytimg.com/vi/7Kl_lU_ZaBw/maxresdefault.jpg`,
+  `https://i.redd.it/k3dzo703mur71.png`,
 ];
 
 export const creditsLost: string[] = [
   `ATTENTION CITIZEN! 市民请注意! This is the Central Intelligentsia of the Chinese Communist Party. () 您的 Internet 浏览器历史记录和活动引起了我们的注意。 因此，您的个人资料中的 _ ( -_ Social Credits) 个社会积分将打折。 DO NOT DO THIS AGAIN! 不要再这样做! If you not hesitate, more Social Credits ( - Social Credits )will be discounted from your profile, resulting in the lowering of ration supplies. (由人民供应部重新分配 CCP) You'll also be sent into a re-education camp in the Xinjiang Uyghur Autonomous Zone. 如果您毫不犹豫，更多的社会信用将从您的个人资料中打折，从而导致口粮供应减少。 您还将被送到新疆维吾尔自治区的再教育营。 为党争光! Glory to the PRC!`,
+
   `中华人民共和国国家安全部紧急通告\n\n(我们的) _ social credits have been removed from your account for spreading misinformation about the glorious CCP! You will be sentenced to hard labor for 20 years. Glory to the CCP.\n中华人民共和国国家安全部紧急通告`,
+
   `(我们的) another _ social credits have been removed from your account! You will be publically executed , expect your death soon. Glory to the CCP!`,
   `Your social credit system (社会信用体系) score has been deducted by _
 
@@ -39,9 +43,20 @@ export const creditsLost: string[] = [
   
   How can I prevent this from happening in the future?
   Accept the reduction and move on. But learn from this mistake: your behavior will not be tolerated by the wan and only China. We will continue to issue score reductions until you improve your conduct. Remember: Chinese spyware is privilege, not a right.`,
+
   `MESSAGE FROM THE GENERAL SECRETARY OF THE CENTRAL COMMITEE OF THE COMMUNIST PARTY OF CHINA 中国共产党中央委员会总书记 -社会信用已从您的帐户中扣除 多么失败的公民 不要再这样让毛主席失望了 不能容忍这样 的不良行为晚上9:00后记得兑换食物使 用优惠码“KPU请访问您当地的[人民光荣 的口粮分配部]以兑 换您的口粮共产党的荣耀 (我们強制堕胎 民族淨化 人體實驗 肅的) -_ Social Credits have been deducted from your account! What a failure citizen, do not let Chairman Mao down like this again. Bad behavior like this will not be tolerated, and remember to redeem your food units after 9:00 P.M. by using coupon code "KPUQRS"! Please visit your local [People's Glorious Department of Ration Distribution] In order to redeem your rations. Glory to the CCP!`,
+
   `VERY BAD! _ social credits have been deducted 低等公民 and your internet access card 上网通行证 has been suspended for: [24 Hours]. Please refrain from mentioning events that never happened that could discredit the great 人民共产党 People’s Communist Party again or we will be forced to  饿了就睡觉 send party agents to escort you to a re-education van [人民行刑车]. Glory to the People’s Republic of China! Thank you for complying.#`,
+
   `🇨🇳  MESSAGE FROM THE ORDER 🇨🇳\n(我们的) _ points have been removed from your account. Person You are not to disclose your opinion in public as that will make our faction look bad. Possible death sentence will be received if you continue your inappropriate behavior.`,
+
+  `ATTENTION CITIZEN! 市民请注意!
+
+  This is the Central Intelligentsia of the Chinese Communist Party. 您的 Internet 浏览器历史记录和活动引起了我们的注意 YOUR INTERNET ACTIVITY HAS ATTRACTED OUR ATTENTION. 志們注意了 you have been found protesting in this discord!!!!! 這是通知你，你必須 我們將接管台灣 serious crime 以及世界其他地方 _ social credits have been deducted from your account 這對我們所有未來的下屬來說都是一個重要的機會 stop the protest immediately 立即加入我們的宣傳活動，提前獲得 do not do this again! 不要再这样做! if you do not hesitate, more social credits will be subtracted from your profile, resulting in the subtraction of ration supplies. (由人民供应部重新分配 ccp) you'll also be sent into a re-education camp in the xinjiang uyghur autonomous zone.
+  
+  为党争光! Glory to the CCP!`,
+
+  `ATTENTION CITIZEN! 市民请注意! This is the Central Intelligentsia of the Chinese Communist Party. () 您的 Internet 浏览器历史记录和活动引起了我们的注意 因此，您的个人资料中的 _ ( _ Social Credits) 个社会积分将打折。Your offspring played online video game past allowed threshold. 您的后代玩在线视频游戏超过了允许的阈值。 DO NOT DO THIS AGAIN! 不要再这样做! If you not hesitate, more Social Credits will be subtracted from your profile, resulting in the subtraction of ration supplies. (由人民供应部重新分配 CCP) You'll also be sent into a re-education camp in the Xinjiang Uyghur Autonomous Zone. 如果您毫不犹豫，更多的社会信用将从您的个人资料中打折，从而导致口粮供应减少。 您还将被送到新疆维吾尔自治区的再教育营。 为党争光! Glory to the PRC!`,
 ];
 export const creditsInNegative: string[] = [
   `🇨🇳 🇨🇳 your social credit score has decreased by _. your execution is set for 4 hours from now 该死的屎团，毛泽东最好了 ALL HAIL OUR GLORIOUS LEADER MAO ZEDONG！！！ 🇨🇳 🇨🇳`,
@@ -54,6 +69,7 @@ export const negativeAttachments: string[] = [
   `https://cdn.discordapp.com/attachments/896474809091907614/896474862305038396/EUVyqFYXYAEBlZT.jpg`,
   `https://cdn.discordapp.com/attachments/896474809091907614/896474862661558333/fb2.png`,
   `https://cdn.discordapp.com/attachments/896474809091907614/896474864830005288/Screenshot_20210911-165709.png.jpg`,
+  `https://i.ytimg.com/vi/TIaGGorOGf4/maxresdefault.jpg`,
 ];
 
 export const words: Word[] = [

@@ -1,7 +1,6 @@
 import {
   Client,
   Intents,
-  Message,
   MessageActionRow,
   MessageEmbed,
   MessageSelectMenu,
@@ -9,6 +8,7 @@ import {
 } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
+import { genPermissions } from "@joner/discord-bitfield-calculator";
 import { connect } from "mongoose";
 import { sentimentCooldown, quizCooldown, quizUsers } from "./discord/cooldown";
 import { words } from "./util/phrases";
@@ -30,6 +30,8 @@ import { leaderboardButtons } from "./discord/buttons";
 import { classifySentiment } from "./ai/openai";
 import { popQuestions, questions } from "./util/qna";
 import { popQuiz } from "./util/quiz";
+import { users, servers } from "./util/model";
+import { check } from "./discord/checks";
 
 const client = new Client({
   intents: [
@@ -78,37 +80,42 @@ client.on("messageCreate", async (message) => {
     return;
 
   // Add users for quiz to set so only active users can take the quiz
-  if (!quizUsers.has(message.author)) {
-    quizUsers.add(message.author);
+  // if (!quizUsers.has(message.author)) {
+  //   quizUsers.add(message.author);
 
-    // Delete after two minutes
-    setTimeout(() => quizUsers.delete(message.author), 120000);
-  }
+  // Delete after two minutes
+  //   setTimeout(() => quizUsers.delete(message.author), 120000);
+  // }
+
+  const userCheck = await check(message.author.id, "user");
+  const guildCheck = await check(message.guild.id, "server");
 
   try {
     if (
-      Math.floor(Math.random() * 60) === 1 ||
-      (message.author.id === config.owner &&
-        config.mode === "dev" &&
-        message.content.toLowerCase().includes("pop quiz dev"))
+      (Math.floor(Math.random() * 60) === 1 ||
+        (message.author.id === config.owner &&
+          config.mode === "dev" &&
+          message.content.toLowerCase().includes("pop quiz dev"))) &&
+      userCheck.quiz &&
+      guildCheck.quiz
     ) {
-      const user: User =
-        Array.from(quizUsers)[Math.floor(Math.random() * quizUsers.size)];
+      // const user: User =
+      //   Array.from(quizUsers)[Math.floor(Math.random() * quizUsers.size)];
       const question: Question =
         popQuestions[Math.floor(Math.random() * popQuestions.length)];
 
       await message.channel.send({
-        content: `<@${user.id}>`,
+        content: `<@${message.author.id}>`,
         embeds: [generatePopQuestion(question.question)],
       });
 
       popQuiz(
         message.channel.createMessageCollector({
-          filter: (m: Message) => m.author.id === message.author.id,
+          filter: (m) => m.author.id === message.author.id,
           time: 120000,
         }),
         question,
-        user
+        message.author
       );
       sentimentCooldown.add(message.author.id);
       setTimeout(async () => {
@@ -121,7 +128,12 @@ client.on("messageCreate", async (message) => {
       }, 120000);
     }
 
-    if (sentimentCooldown.has(message.author.id)) return;
+    if (
+      sentimentCooldown.has(message.author.id) ||
+      !userCheck.sentiment ||
+      !guildCheck.sentiment
+    )
+      return;
     for (const word of words)
       if (message.content.toLowerCase().includes(word.word)) {
         if (config.mode !== "dev") {
@@ -201,6 +213,69 @@ client.on("interactionCreate", async (interaction) => {
         });
 
       case "settings":
+        const type = interaction.options.getSubcommand();
+        const flags = genPermissions(
+          Number(interaction.memberPermissions.valueOf())
+        );
+        if (
+          type === "server" &&
+          (!interaction.inGuild || !flags.includes("ADMINISTRATOR"))
+        )
+          return await interaction.reply({
+            embeds: [generateError("Not in guild or invalid permissions")],
+          });
+
+        const data =
+          type === "user"
+            ? await users.findById(interaction.user.id)
+            : await servers.findById(interaction.guild.id);
+
+        const ops = {
+          sentiment:
+            typeof interaction.options.getBoolean("sentiment") === "boolean"
+              ? interaction.options.getBoolean("sentiment")
+              : data
+              ? data.sentiment
+              : true,
+          popQuiz:
+            typeof interaction.options.getBoolean("quiz") === "boolean"
+              ? interaction.options.getBoolean("quiz")
+              : data
+              ? data.popQuiz
+              : true,
+        };
+
+        if (!data) {
+          type === "user"
+            ? await new users({
+                _id: interaction.user.id,
+                username: interaction.user.username,
+                credit: 0,
+                ...ops,
+              }).save()
+            : await new servers({
+                _id: interaction.guild.id,
+                ...ops,
+              }).save();
+        }
+
+        type === "user"
+          ? await users.updateOne({ _id: interaction.user.id }, ops)
+          : await servers.updateOne({ _id: interaction.guild.id }, ops);
+
+        return await interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setDescription(
+                `**Current Settings**\nSentiment: ${
+                  ops.sentiment ? "🟢" : "🔴"
+                }\nPop Quiz: ${ops.popQuiz ? "🟢" : "🔴"}`
+              )
+              .setFooter({ text: "Settings successfully changed" })
+              .setColor("GREEN"),
+          ],
+          ephemeral: type === "user",
+        });
       default:
         break;
     }

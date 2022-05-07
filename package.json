@@ -2,7 +2,7 @@
   "name": "ccp-bot",
   "version": "1.0.0",
   "description": "China Number one!",
-  "main": "index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
     "start": "ts-node-dev --respawn src/index.ts",
@@ -14,7 +14,9 @@
   "dependencies": {
     "@aws-sdk/client-comprehend": "^3.81.0",
     "@discordjs/rest": "^0.4.1",
+    "@joner/discord-bitfield-calculator": "^1.0.2",
     "chance": "^1.1.8",
+    "discord-bitfield-calculator": "^1.0.0",
     "discord.js": "^13.6.0",
     "lodash": "^4.17.21",
     "mongoose": "^6.3.1",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@types/chance": "^1.1.3",
-    "@types/lodash": "^4.14.182"
+    "@types/lodash": "^4.14.182",
+    "typescript": "^4.6.4"
   }
 }

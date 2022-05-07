@@ -40,7 +40,7 @@ export const commands = [
     .addSubcommand((subcommand) =>
       subcommand
         .setName("guild")
-        .setDescription("Manage guild settings (Admin only)")
+        .setDescription("Manage guild settings (admin only)")
         .addBooleanOption((option) =>
           option
             .setName("sentiment")

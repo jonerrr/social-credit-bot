@@ -18,19 +18,3 @@ export function leaderboardButtons(
       .setStyle("SECONDARY")
   );
 }
-
-export function manageSettings(
-  { _id, sentiment, popQuiz }: ServerModel | UserModel,
-  type: "guild" | "user"
-): MessageActionRow {
-  return new MessageActionRow().addComponents(
-    new MessageButton()
-      .setCustomId(`settings_sentiment_${type}_${_id}_${sentiment}`)
-      .setLabel("Sentiment")
-      .setStyle(sentiment ? "SUCCESS" : "DANGER"),
-    new MessageButton()
-      .setCustomId(`settings_quiz_${type}_${_id}_${sentiment}`)
-      .setLabel("Pop Quiz")
-      .setStyle(popQuiz ? "SUCCESS" : "DANGER")
-  );
-}

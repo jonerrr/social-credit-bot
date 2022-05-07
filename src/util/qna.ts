@@ -8,8 +8,25 @@ export const popQuestions: Question[] = [
   },
   { question: "Is taiwan a real country?", answers: ["no", "nope"] },
   {
-    question: "Long live...",
-    answers: ["the ccp", "the china communist party", "china"],
+    question: "Long live the...",
+    answers: [
+      "ccp",
+      "china communist party",
+      "prc",
+      "people's republic of china",
+    ],
+  },
+  {
+    question: "Who is the founder of the People's Republic of China?",
+    answers: ["mao", "mao zedong"],
+  },
+  {
+    question: "How many human right violations does China have?",
+    answers: ["0", "zero"],
+  },
+  {
+    question: "Do you accept to be watched with facial recognition 24/7?",
+    answers: ["yes", "yep", "yeah", "yup"],
   },
 ];
 
@@ -80,6 +97,29 @@ export const questions: Quiz[] = [
       { label: "Great! I love China! Long live the CCP!", value: "c" },
       { label: "Not sure", value: "i1" },
       { label: "Bad", value: "i2" },
+    ],
+  },
+  {
+    question: "Does western propaganda exist?",
+    answers: [
+      { label: "Yes", value: "c" },
+      { label: "No", value: "i1" },
+    ],
+  },
+  {
+    question: "What is your favorite social media?",
+    answers: [
+      { label: "Instagram", value: "i" },
+      { label: "Twitter", value: "i1" },
+      { label: "WeChat", value: "c" },
+    ],
+  },
+  {
+    question:
+      "How did 45-70 million people die between late 1958 to early 1962",
+    answers: [
+      { label: "Great leap forward and collectivization", value: "i" },
+      { label: "Natural disasters", value: "c" },
     ],
   },
 ];
