@@ -213,12 +213,13 @@ client.on("interactionCreate", async (interaction) => {
         });
 
       case "settings":
-        const type = interaction.options.getSubcommand();
+        const type = interaction.options.getSubcommand() as "user" | "guild";
         const flags = genPermissions(
           Number(interaction.memberPermissions.valueOf())
         );
+
         if (
-          type === "server" &&
+          type === "guild" &&
           (!interaction.inGuild || !flags.includes("ADMINISTRATOR"))
         )
           return await interaction.reply({
