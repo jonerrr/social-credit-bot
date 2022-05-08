@@ -28,6 +28,10 @@ export const popQuestions: Question[] = [
     question: "Do you accept to be watched with facial recognition 24/7?",
     answers: ["yes", "yep", "yeah", "yup"],
   },
+  {
+    question: "What happened on June 4th 1989",
+    answers: ["nothing", "your mom"],
+  },
 ];
 
 export const questions: Quiz[] = [
