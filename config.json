@@ -7,6 +7,6 @@
   "uri": "",
   "ai": {
     "openai": "",
-    "aws": ""
+    "aws_region": ""
   }
 }
