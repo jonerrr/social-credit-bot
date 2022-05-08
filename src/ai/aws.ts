@@ -8,45 +8,35 @@ import {
 import { Message } from "discord.js";
 import { generateCredits, update } from "../util/credit";
 import { generateReply } from "../discord/embed";
+import config from "../../config.json";
+import { detectLanguage } from "../util/language";
 
-const client = new ComprehendClient({ region: "us-east-1" });
+const client = new ComprehendClient({
+  region: config.ai.aws_region,
+});
 
 export async function comprehend(
   message: Message,
   good: boolean
 ): Promise<void> {
-  console.log("AWS Comprehend currently broken, please use OpenAI");
-  process.exit(1);
+  console.log(await detectLanguage(message.content));
   const data = await client.send(
     new BatchDetectSentimentCommand({
       LanguageCode: "en",
       TextList: [message.content.toLowerCase()],
     })
   );
+  if (!data.ResultList[0]) return;
 
-  if (
-    !data.ResultList ||
-    !data.ResultList[0].SentimentScore ||
-    !data.ResultList[0].Sentiment
-  )
-    return;
-
-  const score = generateCredits(data.ResultList[0].Sentiment);
-
+  let score = generateCredits(
+    data.ResultList[0].Sentiment.toLowerCase() === "neutral"
+      ? "positive"
+      : data.ResultList[0].Sentiment.toLowerCase()
+  );
+  score = good ? score : -score;
   await message.channel.send({
     embeds: [generateReply(score, await update(message.author, score))],
   });
 
   return;
 }
-
-// function generateCredit(sentiment: string): number {
-//   switch (sentiment) {
-//     case "NEGATIVE":
-//       return Math.floor(Math.random() * (-100 - 75)) - 75;
-//     case "POSITIVE":
-//       return Math.floor(Math.random() * (100 - 75)) + 75;
-//     default:
-//       return Math.floor(Math.random() * (10 + -10)) + -20;
-//   }
-// }

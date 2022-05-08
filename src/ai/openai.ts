@@ -23,15 +23,12 @@ export async function classifySentiment(
     presence_penalty: 0,
   });
 
-
   let score = generateCredits(
     sentiment.data.choices[0].text.includes("positive")
       ? "positive"
       : "negative"
   );
-
   score = good ? score : -score;
-
   await message.channel.send({
     embeds: [generateReply(score, await update(message.author, score))],
   });

@@ -15,6 +15,7 @@
     "@aws-sdk/client-comprehend": "^3.81.0",
     "@discordjs/rest": "^0.4.1",
     "@joner/discord-bitfield-calculator": "^1.0.2",
+    "@vitalets/google-translate-api": "^8.0.0",
     "chance": "^1.1.8",
     "discord-bitfield-calculator": "^1.0.0",
     "discord.js": "^13.6.0",
