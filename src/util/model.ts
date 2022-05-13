@@ -10,6 +10,7 @@ const userSchema = new Schema(
     sentiment: Boolean,
     popQuiz: Boolean,
     voteExpire: Number,
+    cooldown: Number,
   },
   { timestamps: true }
 );
@@ -29,6 +30,7 @@ const serverSchema = new Schema<ServerModel>(
     _id: { type: String, required: true },
     sentiment: { type: Boolean, required: true },
     popQuiz: { type: Boolean, required: true },
+    cooldown: { type: Number },
   },
   { timestamps: true }
 );

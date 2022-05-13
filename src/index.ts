@@ -32,6 +32,8 @@ import { popQuestions, questions } from "./util/qna";
 import { popQuiz } from "./util/quiz";
 import { users, servers } from "./util/model";
 import { check } from "./discord/checks";
+import { correctSpelling } from "./util/language";
+import { adminCommands } from "./discord/admin";
 
 const client = new Client({
   intents: [
@@ -86,6 +88,7 @@ client.on("messageCreate", async (message) => {
   // Delete after two minutes
   //   setTimeout(() => quizUsers.delete(message.author), 120000);
   // }
+  await adminCommands(message);
 
   const userCheck = await check(message.author.id, "user");
   const guildCheck = await check(message.guild.id, "server");
@@ -134,13 +137,27 @@ client.on("messageCreate", async (message) => {
       !guildCheck.sentiment
     )
       return;
+    // const correct = await correctSpelling(message.content.split(" "));
+    //TODO admin remove cooldown for specific servers
+    if (message.content.split(" ").length === 1) return;
+
+    let cooldown = Math.floor(Math.random() * (600000 - 300000)) + 300000;
+    if (userCheck.cooldown || guildCheck.cooldown) {
+      cooldown = userCheck.cooldown || guildCheck.cooldown;
+      if (userCheck.cooldown && guildCheck.cooldown)
+        cooldown =
+          userCheck.cooldown > guildCheck.cooldown
+            ? guildCheck.cooldown
+            : userCheck.cooldown;
+    }
+
     for (const word of words)
       if (message.content.toLowerCase().includes(word.word)) {
         if (config.mode !== "dev") {
           sentimentCooldown.add(message.author.id);
           setTimeout(
             () => sentimentCooldown.delete(message.author.id),
-            Math.floor(Math.random() * (600000 - 300000)) + 300000
+            cooldown
           );
         }
 

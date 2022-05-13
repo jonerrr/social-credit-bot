@@ -90,7 +90,7 @@ export const words: Word[] = [
   { word: "democracy", good: false },
   { word: "free speech", good: false },
   { word: "biden", good: false },
-  { word: "tiananmen square massacre", good: false },
+  // { word: "tiananmen square massacre", good: true },
   { word: "taiwan", good: false },
 ];
 

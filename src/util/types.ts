@@ -21,12 +21,14 @@ export interface UserModel {
   sentiment?: boolean;
   popQuiz?: boolean;
   voteExpire: number;
+  cooldown: number;
 }
 
 export interface ServerModel {
   _id: string;
   sentiment: boolean;
   popQuiz: boolean;
+  cooldown: number;
 }
 
 export interface Leaderboard {
