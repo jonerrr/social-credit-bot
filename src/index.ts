@@ -8,7 +8,8 @@ import {
 } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
-import { genPermissions } from "@joner/discord-bitfield-calculator";
+// import { genPermissions } from "@joner/discord-bitfield-calculator";
+import { permissions } from "discord-bitfield-calculator";
 import { connect } from "mongoose";
 import { sentimentCooldown, quizCooldown, quizUsers } from "./discord/cooldown";
 import { words } from "./util/phrases";
@@ -231,7 +232,7 @@ client.on("interactionCreate", async (interaction) => {
 
       case "settings":
         const type = interaction.options.getSubcommand() as "user" | "guild";
-        const flags = genPermissions(
+        const flags = permissions(
           Number(interaction.memberPermissions.valueOf())
         );
 
