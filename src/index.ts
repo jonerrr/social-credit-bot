@@ -91,8 +91,8 @@ client.on("messageCreate", async (message) => {
   // }
   await adminCommands(message);
 
-  const userCheck = await check(message.author.id, "user");
-  const guildCheck = await check(message.guild.id, "server");
+  const userCheck = await check(message.author.id, "user", message.author);
+  const guildCheck = await check(message.guild.id, "server", message.guild);
 
   try {
     if (
