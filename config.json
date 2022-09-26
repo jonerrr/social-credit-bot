@@ -1,12 +1,14 @@
 {
-  "mode": "",
+  "mode": "prod",
   "guild": "",
   "owner": "",
-  "service": "",
+  "service": "aws",
   "token": "",
   "uri": "",
   "ai": {
     "openai": "",
-    "aws_region": ""
+    "aws_region": "us-east-1",
+    "aws_key": "",
+    "aws_secret_key": ""
   }
 }

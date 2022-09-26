@@ -9,17 +9,21 @@ import { Message } from "discord.js";
 import { generateCredits, update } from "../util/credit";
 import { generateReply } from "../discord/embed";
 import config from "../../config.json";
-import { detectLanguage } from "../util/language";
+// import { detectLanguage } from "../util/language";
 
 const client = new ComprehendClient({
   region: config.ai.aws_region,
+  credentials: {
+    accessKeyId: config.ai.aws_key,
+    secretAccessKey: config.ai.aws_secret_key,
+  },
 });
 
 export async function comprehend(
   message: Message,
   good: boolean
 ): Promise<void> {
-  console.log(await detectLanguage(message.content));
+  // console.log(await detectLanguage(message.content));
   const data = await client.send(
     new BatchDetectSentimentCommand({
       LanguageCode: "en",

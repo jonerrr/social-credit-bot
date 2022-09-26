@@ -33,7 +33,7 @@ import { popQuestions, questions } from "./util/qna";
 import { popQuiz } from "./util/quiz";
 import { users, servers } from "./util/model";
 import { check } from "./discord/checks";
-import { correctSpelling } from "./util/language";
+// import { correctSpelling } from "./util/language";
 import { adminCommands } from "./discord/admin";
 
 const client = new Client({
