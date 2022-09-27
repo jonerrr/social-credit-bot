@@ -1,10 +1,9 @@
 import { Message } from "discord.js";
 import { users, servers } from "../util/model";
-import config from "../../config.json";
 import { generateError } from "./embed";
 
 export async function adminCommands(message: Message) {
-  if (message.author.id !== config.owner) return;
+  if (message.author.id !== process.env.OWNER_ID) return;
   if (message.content.toLowerCase().startsWith("updatecd")) {
     if (message.mentions.users.size === 1) {
       const user = await users.findById(message.mentions.users.first().id);

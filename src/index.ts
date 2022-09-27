@@ -1,3 +1,4 @@
+import "dotenv/config";
 import {
   Client,
   Intents,
@@ -16,7 +17,6 @@ import { words } from "./util/phrases";
 import { comprehend } from "./ai/aws";
 import _ from "lodash";
 import { commands } from "./discord/commands";
-import config from "../config.json";
 import {
   generateCredit,
   generateError,
@@ -43,23 +43,23 @@ const client = new Client({
     Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
   ],
 });
-const rest = new REST({ version: "9" }).setToken(config.token);
+const rest = new REST({ version: "9" }).setToken(process.env.TOKEN!);
 
 client.on("ready", async () => {
   if (!client.user) process.exit(1);
 
   console.log(`Logged in as ${client.user.tag}`);
-  console.log(`Mode: ${config.mode}`);
-  console.log(`AI: ${config.service}`);
+  console.log(`Mode: ${process.env.MODE!}`);
+  console.log(`AI: ${process.env.SERVICE!}`);
 
   client.user.setPresence({
     status: "dnd",
     activities: [{ name: "the citizens of china", type: "WATCHING" }],
   });
 
-  config.mode === "dev"
+  process.env.MODE === "dev"
     ? await rest.put(
-        Routes.applicationGuildCommands(client.user.id, config.guild),
+        Routes.applicationGuildCommands(client.user.id, process.env.DEV_GUILD!),
         { body: commands }
       )
     : await rest.put(Routes.applicationCommands(client.user.id), {
@@ -67,7 +67,7 @@ client.on("ready", async () => {
       });
   console.log(
     `${commands.length} ${
-      config.mode === "dev" ? "guild" : "global"
+      process.env.MODE! === "dev" ? "guild" : "global"
     } commands registered`
   );
 });
@@ -97,8 +97,8 @@ client.on("messageCreate", async (message) => {
   try {
     if (
       (Math.floor(Math.random() * 60) === 1 ||
-        (message.author.id === config.owner &&
-          config.mode === "dev" &&
+        (message.author.id === process.env.OWNER_ID! &&
+          process.env.MODE! === "dev" &&
           message.content.toLowerCase().includes("pop quiz dev"))) &&
       userCheck.quiz &&
       guildCheck.quiz
@@ -154,7 +154,7 @@ client.on("messageCreate", async (message) => {
 
     for (const word of words)
       if (message.content.toLowerCase().includes(word.word)) {
-        if (config.mode !== "dev") {
+        if (process.env.MODE !== "dev") {
           sentimentCooldown.add(message.author.id);
           setTimeout(
             () => sentimentCooldown.delete(message.author.id),
@@ -162,7 +162,7 @@ client.on("messageCreate", async (message) => {
           );
         }
 
-        config.service == "aws"
+        process.env.SERVCE == "aws"
           ? comprehend(message, word.good)
           : await classifySentiment(message, word.good);
         break;
@@ -385,5 +385,5 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-client.login(config.token);
-connect(config.uri);
+client.login(process.env.TOKEN!);
+connect(process.env.MONGO_URL!);

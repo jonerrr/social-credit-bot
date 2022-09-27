@@ -8,14 +8,13 @@ import {
 import { Message } from "discord.js";
 import { generateCredits, update } from "../util/credit";
 import { generateReply } from "../discord/embed";
-import config from "../../config.json";
 // import { detectLanguage } from "../util/language";
 
 const client = new ComprehendClient({
-  region: config.ai.aws_region,
+  region: process.env.AWS_REGION,
   credentials: {
-    accessKeyId: config.ai.aws_key,
-    secretAccessKey: config.ai.aws_secret_key,
+    accessKeyId: process.env.AWS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
   },
 });
 

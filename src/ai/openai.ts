@@ -2,11 +2,10 @@ import { Configuration, OpenAIApi } from "openai";
 import { Message } from "discord.js";
 import { generateCredits, update } from "../util/credit";
 import { generateReply } from "../discord/embed";
-import config from "../../config.json";
 
 const openai = new OpenAIApi(
   new Configuration({
-    apiKey: config.ai.openai,
+    apiKey: process.env.OPENAI_KEY!,
   })
 );
 
