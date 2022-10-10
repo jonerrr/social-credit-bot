@@ -162,7 +162,7 @@ client.on("messageCreate", async (message) => {
           );
         }
 
-        process.env.SERVCE == "aws"
+        process.env.SERVICE == "aws"
           ? comprehend(message, word.good)
           : await classifySentiment(message, word.good);
         break;
