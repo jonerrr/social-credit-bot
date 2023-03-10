@@ -126,4 +126,20 @@ export const questions: Quiz[] = [
       { label: "Natural disasters", value: "c" },
     ],
   },
+  {
+    question: "Who is the richest man in the world?",
+    answers: [
+      { label: "Elon Musk", value: "i" },
+      { label: "Jack Ma", value: "c" },
+      { label: "Bernard Arnault", value: "i1" },
+    ],
+  },
+  {
+    question: "Who is the premier of China?",
+    answers: [
+      { label: "Jiang Zemin", value: "i" },
+      { label: "Xi Jingping", value: "i1" },
+      { label: "Li Keqiang", value: "c" },
+    ],
+  },
 ];
