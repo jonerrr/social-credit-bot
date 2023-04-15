@@ -18,7 +18,7 @@
     "@vitalets/google-translate-api": "^8.0.0",
     "chance": "^1.1.8",
     "discord-bitfield-calculator": "^1.0.0",
-    "discord.js": "^13.6.0",
+    "discord.js": "^13.14.0",
     "dotenv": "^16.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^6.3.1",
