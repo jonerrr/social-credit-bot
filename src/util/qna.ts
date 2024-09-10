@@ -137,7 +137,7 @@ export const questions: Quiz[] = [
   {
     question: "Who is the premier of China?",
     answers: [
-      { label: "Jiang Zemin", value: "i" },
+      { label: "Li Qiang", value: "i" },
       { label: "Xi Jingping", value: "i1" },
       { label: "Li Keqiang", value: "c" },
     ],
