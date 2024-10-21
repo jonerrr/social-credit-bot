@@ -43,11 +43,17 @@ export async function adminCommands(message: Message) {
   ) {
     const user = await users.findById(message.mentions.users.first().id);
     if (!user) return generateError("User not in database");
-    await users.updateOne(
-      { _id: message.mentions.users.first().id },
-      { credit: message.cleanContent.replace(/[^0-9]/g, "") }
-    );
 
-    return await message.channel.send({ content: "Credit for user updated" });
+    const creditMatch = message.cleanContent.match(/-?[0-9]\d*(\.\d+)?/);
+
+    if (creditMatch) {
+      const credit = parseFloat(creditMatch[0]);
+      await users.updateOne(
+        { _id: message.mentions.users.first().id },
+        { credit }
+      );
+
+      await message.channel.send({ content: "Credit for user updated" });
+    }
   }
 }

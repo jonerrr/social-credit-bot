@@ -119,17 +119,11 @@ client.on("messageCreate", async (message) => {
           time: 120000,
         }),
         question,
-        message.author
+        message.author,
+        message
       );
+      // console.log("adding to cooldown");
       sentimentCooldown.add(message.author.id);
-      setTimeout(async () => {
-        sentimentCooldown.delete(message.author.id);
-        const score = Math.floor(Math.random() * (-100 - 75)) - 75;
-        return await message.channel.send({
-          content: `<@${message.author.id}>`,
-          embeds: [generateReply(score, await update(message.author, score))],
-        });
-      }, 120000);
     }
 
     if (
