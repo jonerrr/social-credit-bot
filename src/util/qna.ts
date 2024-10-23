@@ -142,4 +142,35 @@ export const questions: Quiz[] = [
       { label: "Li Keqiang", value: "c" },
     ],
   },
+  {
+    question: "Who is the premier of China?",
+    answers: [
+      { label: "Li Qiang", value: "i" },
+      { label: "Xi Jingping", value: "i1" },
+      { label: "Li Keqiang", value: "c" },
+    ],
+  },
+  {
+    question: "Does the People's Republic of China sponsor mass surveillance campaigns?",
+    answers: [
+      { label: "Yes", value: "i" },
+      { label: "No", value: "c" },
+    ],
+  },
+  {
+    question: "What is the best food ever in the world?",
+    answers: [
+      { label: "Burger", value: "i" },
+      { label: "Hot dog (not the animal)", value: "i1" },
+      { label: "Peking Duck or dumplings", value: "c" },
+    ],
+  },
+  {
+    question: "How long is the Chinese New Year celebration?",
+    answers: [
+      { label: "5 Days", value: "i" },
+      { label: "15 Days", value: "c" },
+      { label: "8 Days", value: "i1" }
+    ],
+  },
 ];

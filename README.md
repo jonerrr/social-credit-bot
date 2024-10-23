@@ -1,5 +1,8 @@
 # Social credit bot
 
+We have no association with the Chinese Communist Party. This repository is entirely for comedic purposes.
+
+
 ## Features
 
 - Social credit system with leaderboard
